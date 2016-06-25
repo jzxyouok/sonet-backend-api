@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class CreateMessageTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('message', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('text');
+            $table->timestamp('created_at');
+            $table->integer('conversation_id')->unsigned()->nullable();
+            $table->foreign('conversation_id')->references('id')->on('conversation');
+            $table->integer('sender_id')->unsigned()->nullable();
+            $table->foreign('sender_id')->references('id')->on('user');
+            //$table->foreign('receiver_id')->references('id')->on('user');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('message');
+    }
+}
