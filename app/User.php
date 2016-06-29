@@ -25,7 +25,7 @@ class User extends Authenticatable
     ];
 
 
-    protected $table = 'users';
+    protected $table = 'user';
     protected $primaryKey ='id';
 
     public function messages()

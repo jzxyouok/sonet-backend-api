@@ -40,8 +40,8 @@ class ConversationController extends Controller
     {
         $Conversation = new Conversation;
 
-        $Conversation->user1 = $request->user1;
-        $Conversation->user2 = $request->user2;
+        $Conversation->user1_id = $request->user1_id;
+        $Conversation->user2_id = $request->user2_id;
 
         $Conversation->save();
     }

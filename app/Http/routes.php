@@ -19,3 +19,6 @@ Route::get('conversation.index','ConversationController@index');
 Route::post('conversation.store', 'ConversationController@store');
 Route::get('conversation.show.{$id}', 'ConversationController@show');
 Route::delete('conversation.destroy.{$id}','ConversationController@destroy');
+
+Route::post('authenticate','AuthenticateController@authenticate');
+Route::post('user.create','UserController@create');
