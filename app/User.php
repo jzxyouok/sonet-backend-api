@@ -30,6 +30,11 @@ class User extends Authenticatable
 
     public function messages()
     {
-        return $this-hasMany('App/Messages');
+        return $this-hasMany('App\Message');
+    }
+
+    public function userConversationMapping()
+    {
+        return $this-hasMany('App\UserConversationMapping');
     }
 }

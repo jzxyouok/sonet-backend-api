@@ -10,16 +10,26 @@ class Conversation extends Model
     protected $primaryKey ='id';
     public $timestamps = false;
 
+    protected $fillable = [
+        'user1_id', 'user2_id',
+    ];
+
 
     public function User()
     {
-    	return $this-belongsTo('App/User');
+    	return $this->belongsTo('App\User');
     
     }
 
-    public function Message()
+    public function messages()
     {
-    	return $this-belongsTo('App/Message');
-    
+        return $this->hasMany('App\Message');
+    }
+
+    public function userConversationMapping()
+    {
+        return $this->hasMany('App\UserConversationMapping');
     }
 }
+
+

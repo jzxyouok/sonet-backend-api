@@ -6,20 +6,23 @@ namespace App\Http\Controllers;
 use Validator;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 use App\Http\Requests;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
+use App\User;
+
 
 class AuthenticateController extends Controller
 {
 
-    public function authenticate(Request $request)
+    public function signin(Request $request)
     {
         $validator = Validator::make($request->all(), [
         'email' => 'required|max:25|email',
-        'password' => 'required|max:25',
+        'password' => 'required|min:3',
         ]);
 
             if($validator->fails())
@@ -27,7 +30,6 @@ class AuthenticateController extends Controller
                 return $validator->messages()->toJson();
             }
         
-
         // grab credentials from the request
         $credentials = $request->only('email', 'password');
 
@@ -44,4 +46,30 @@ class AuthenticateController extends Controller
         // all good so return the token
         return response()->json(compact('token'));
     }
+
+    public function signup(Request $request)
+    {
+         $validator = Validator::make($request->all(), [
+        'email' => 'required|max:25|email',
+        'password' => 'required|min:3|confirmed',
+        'password_confirmation' => 'required|min:3',
+        ]);
+
+            if($validator->fails())
+            {
+                return $validator->messages()->toJson();
+            }
+         $credentials = $request->only('email','name');
+
+       try {
+           $user = User::create(['password' => bcrypt($request->password), 'email' =>  $request->email,  'name' => $request->name]);
+       } catch (\Illuminate\Database\QueryException $e) {
+           return response()->json(['error' => 'User already exists.'], Response::HTTP_CONFLICT);
+       }
+
+       $token = JWTAuth::fromUser($user);
+
+       return response()->json(compact('token'));   
+    }
+      
 }

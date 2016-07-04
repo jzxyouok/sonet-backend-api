@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Conversation;
+use App\UserConversationMapping;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 use App\Http\Requests;
 
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class ConversationController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +22,10 @@ class ConversationController extends Controller
      */
     public function index()
     {
-        return Conversation::orderBy('id')->get();
+        $conversations = Conversation::all();
+        return response()->json([
+            'data' => $conversations
+        ], 200);
     }
 
     /**
@@ -38,23 +46,46 @@ class ConversationController extends Controller
      */
     public function store(Request $request)
     {
-        $Conversation = new Conversation;
+            
+        if (!$user = JWTAuth::parseToken()->authenticate()) {
+            return response()->json(['user_not_found'], 404);}
+  
+        $conversation = Conversation::create();
+        $userConversationMapping = UserConversationMapping::create([
+            'user_id' => $user->id,
+            'conversation_id' => $conversation->id
+            ]);
+        return response()->json([
+            'data' => $userConversationMapping
+        ], 200);
 
-        $Conversation->user1_id = $request->user1_id;
-        $Conversation->user2_id = $request->user2_id;
-
-        $Conversation->save();
     }
 
+    public function messages()
+    {
+         $currentUser = JWTAuth::parseToken()->authenticate();
+         $conversation_id = UserConversationMapping::find($currentUser->id)->conversation_id;
+         $messages = Conversation::find($currentUser->conversation_id)->messages;
+
+        return response()->json([
+            'data' => $messages->sortByDesc('id')->all()
+        ], 200);
+    }
+    
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        return Conversation::find($id);
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        //$conversation_ids = UserConversationMapping::find($currentUser->user_id)->conversation_id;
+
+        return Conversation::whereIn('id',UserConversationMapping::where('user_id', $currentUser->id)
+                                        ->orderBy('created_at', 'desc')
+                                        ->pluck("conversation_id"))->get();
     }
 
     /**
@@ -90,4 +121,6 @@ class ConversationController extends Controller
     {
         Conversation::destroy($id);
     }
+
+
 }

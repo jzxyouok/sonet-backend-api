@@ -16,13 +16,13 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('email')->unique();
             $table->string('name');
-            $table->string('password', 60);
+            $table->string('password');
+            $table->integer('conversation_id')->unsigned()->nullable();
+            $table->foreign('conversation_id')->references('id')->on('conversation');
             $table->timestamps();
-        });
-
-        
+        });        
     }
-
+    
     /**
      * Reverse the migrations.
      *
@@ -30,6 +30,9 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
+        Schema::table('user', function ($table) {
+            $table->dropForeign('user_conversation_id_foreign');
+        });
         Schema::drop('user');
     }
 }

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Message;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-class MessageController extends Controller
+class UserConversationMappingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,12 @@ class MessageController extends Controller
      */
     public function index()
     {
-        return Message::orderBy('id', 'desc')->get();
+        $currentUser = JWTAuth::parseToken()->authenticate();.
+
+        $conversations = Conversation::where('user_id', $currentUser->user_id)
+                                ->sortByDesc('created_at')
+                                ->get();
+        return $conversations;
     }
 
     /**
@@ -37,13 +41,7 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        $Message = new Message;
-
-        $Message->text = $request->text;
-        $Message->conversation_id = $request->conversation_id;
-        $Message->sender_id = $request->sender_id;
-
-        $Message->save();
+        //
     }
 
     /**
@@ -54,7 +52,7 @@ class MessageController extends Controller
      */
     public function show($id)
     {
-        return Message::find($id);
+        //
     }
 
     /**
@@ -88,6 +86,6 @@ class MessageController extends Controller
      */
     public function destroy($id)
     {
-        Message::destroy($id);
+        //
     }
 }

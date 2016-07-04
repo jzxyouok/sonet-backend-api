@@ -31,6 +31,10 @@ class CreateMessageTable extends Migration
      */
     public function down()
     {
+        Schema::table('message', function ($table) {
+            $table->dropForeign('message_conversation_id_foreign');
+            $table->dropForeign('message_sender_id_foreign');
+        });
         Schema::drop('message');
     }
 }

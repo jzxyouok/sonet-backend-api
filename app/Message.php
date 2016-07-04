@@ -18,7 +18,7 @@ class Message extends Model
     
     public function Conversation()
     {
-    	return $this-belongsTo('App/Conversation');
+    	return $this-belongsTo('App\Conversation');
     }
     
 
