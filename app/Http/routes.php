@@ -42,8 +42,8 @@ Route::group(['middleware' => 'jwt.auth.group'], function () {
 	Route::delete('conversation.destroy/{id}','ConversationController@destroy');
 	Route::get('conversation.messages/{conversation_id}','ConversationController@messages');
 
-	Route::get('user.currentUser','UserController@currentUser');
+	Route::get('user.currentuser','UserController@currentUser');
 	Route::post('new','UserConversationMappingController@store');
-
-});
 	Route::get('user.allUser','UserController@allUser');
+});
+	

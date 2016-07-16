@@ -20,6 +20,8 @@ class CreateUsersTable extends Migration
             $table->integer('conversation_id')->unsigned()->nullable();
             $table->foreign('conversation_id')->references('id')->on('conversation');
             $table->timestamps();
+            $table->string('photo');
+            
         });        
     }
     

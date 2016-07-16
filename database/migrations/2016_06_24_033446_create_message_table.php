@@ -21,7 +21,6 @@ class CreateMessageTable extends Migration
             $table->integer('sender_id')->unsigned();
             $table->foreign('sender_id')->references('id')->on('user');
             $table->string('user_name');
-            $table->string('photo');
             //$table->foreign('receiver_id')->references('id')->on('user');
         });
     }

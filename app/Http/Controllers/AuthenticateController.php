@@ -66,7 +66,18 @@ class AuthenticateController extends Controller
          $credentials = $request->only('email','name');
 
        try {
-           $user = User::create(['password' => bcrypt($request->password), 'email' =>  $request->email,  'name' => $request->name]);
+            $user = new User;
+            $user->password = bcrypt($request->password);
+            $user->email = $request->email;
+            $user->name = $request->name;
+            if($request->photo){
+                $user->photo = $request->photo;
+            }
+            else{
+                $user->photo = "http://www.expatica.com/images/default_avatar.jpg";
+            }
+            $user->save();
+           //$user = User::create(['password' => bcrypt($request->password), 'email' =>  $request->email,  'name' => $request->name]);
        } catch (\Illuminate\Database\QueryException $e) {
            return response()->json(['error' => 'User already exists.'], 409);
        }
