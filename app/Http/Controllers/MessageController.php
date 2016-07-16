@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Message;
 use Illuminate\Http\Request;
+use App\UserConversationMapping;
 
 use App\Http\Requests;
+
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class MessageController extends Controller
 {
@@ -37,13 +41,32 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
+
+        $user = JWTAuth::parseToken()->authenticate();
+        $matchThese = ['conversation_id' => $request->conversation_id, 'user_id' => $user->id];
+        
+
+
+
+        if(!UserConversationMapping::where($matchThese)
+                                   ->get()->count())
+        {
+            return response()->json([
+                            'error' => 'you cant access this conversation' 
+                        ], 401);
+        }
+        
         $Message = new Message;
 
         $Message->text = $request->text;
         $Message->conversation_id = $request->conversation_id;
-        $Message->sender_id = $request->sender_id;
-
+        $Message->sender_id = $user->id;
+        
         $Message->save();
+
+        return response()->json([
+                            'data' => $Message
+                        ], 200);
     }
 
     /**
@@ -65,7 +88,7 @@ class MessageController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**

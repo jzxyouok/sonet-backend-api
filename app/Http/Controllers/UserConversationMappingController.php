@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\UserConversationMapping;
 
 class UserConversationMappingController extends Controller
 {
@@ -15,7 +16,7 @@ class UserConversationMappingController extends Controller
      */
     public function index()
     {
-        $currentUser = JWTAuth::parseToken()->authenticate();.
+        $currentUser = JWTAuth::parseToken()->authenticate();
 
         $conversations = Conversation::where('user_id', $currentUser->user_id)
                                 ->sortByDesc('created_at')
@@ -40,8 +41,11 @@ class UserConversationMappingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        $userConversationMapping = new UserConversationMapping;
+        $userConversationMapping->user_id = $request->user_id;
+        $userConversationMapping->conversation_id = $request->conversation_id;
+        $userConversationMapping->save();
     }
 
     /**

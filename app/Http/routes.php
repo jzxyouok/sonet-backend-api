@@ -12,7 +12,6 @@
 */
 
 /*
-
 Route::get('message.index','MessageController@index');
 Route::post('message.store', 'MessageController@store');
 Route::get('message.show/{id}', 'MessageController@show');
@@ -41,8 +40,10 @@ Route::group(['middleware' => 'jwt.auth.group'], function () {
 	Route::post('conversation.store', ['middleware' => 'jwt.auth','uses' => 'ConversationController@store']);
 	Route::get('conversation.show', 'ConversationController@show');
 	Route::delete('conversation.destroy/{id}','ConversationController@destroy');
-	Route::get('conversation.messages','ConversationController@messages');
+	Route::get('conversation.messages/{conversation_id}','ConversationController@messages');
 
-	Route::get('currentUser','UserController@currentUser');
+	Route::get('user.currentUser','UserController@currentUser');
+	Route::post('new','UserConversationMappingController@store');
 
 });
+	Route::get('user.allUser','UserController@allUser');

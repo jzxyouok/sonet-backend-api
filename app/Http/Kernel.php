@@ -15,6 +15,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        'Barryvdh\Cors\HandleCors',  
     ];
 
     /**
@@ -37,6 +38,8 @@ class Kernel extends HttpKernel
 
         'jwt.auth.group' => [
             'Tymon\JWTAuth\Middleware\GetUserFromToken',
+            'Barryvdh\Cors\HandleCors',  
+
         ],
     ];
 

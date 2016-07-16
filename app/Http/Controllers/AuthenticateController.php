@@ -27,7 +27,7 @@ class AuthenticateController extends Controller
 
             if($validator->fails())
             {
-                return $validator->messages()->toJson();
+                return response()->json(['error' => $validator->messages()], 400);
             }
         
         // grab credentials from the request
@@ -36,7 +36,7 @@ class AuthenticateController extends Controller
         try {
             // attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'invalid_credentials'], 401);
+                return response()->json(['error' => 'These credentials do not match our records.'], 401);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
@@ -44,27 +44,31 @@ class AuthenticateController extends Controller
         }
 
         // all good so return the token
-        return response()->json(compact('token'));
+        return response()->json([
+            'token'=> $token,
+            //'user' => JWTAuth::attempt($credentials)
+                            ]);
     }
 
     public function signup(Request $request)
     {
          $validator = Validator::make($request->all(), [
         'email' => 'required|max:25|email',
+        'name' => 'required|min:3',
         'password' => 'required|min:3|confirmed',
         'password_confirmation' => 'required|min:3',
         ]);
 
             if($validator->fails())
             {
-                return $validator->messages()->toJson();
+                return response()->json(['error' => $validator->messages()], 400);
             }
          $credentials = $request->only('email','name');
 
        try {
            $user = User::create(['password' => bcrypt($request->password), 'email' =>  $request->email,  'name' => $request->name]);
        } catch (\Illuminate\Database\QueryException $e) {
-           return response()->json(['error' => 'User already exists.'], Response::HTTP_CONFLICT);
+           return response()->json(['error' => 'User already exists.'], 409);
        }
 
        $token = JWTAuth::fromUser($user);

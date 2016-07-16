@@ -16,10 +16,12 @@ class CreateMessageTable extends Migration
             $table->increments('id');
             $table->string('text');
             $table->timestamp('created_at');
-            $table->integer('conversation_id')->unsigned()->nullable();
+            $table->integer('conversation_id')->unsigned();
             $table->foreign('conversation_id')->references('id')->on('conversation');
-            $table->integer('sender_id')->unsigned()->nullable();
+            $table->integer('sender_id')->unsigned();
             $table->foreign('sender_id')->references('id')->on('user');
+            $table->string('user_name');
+            $table->string('photo');
             //$table->foreign('receiver_id')->references('id')->on('user');
         });
     }

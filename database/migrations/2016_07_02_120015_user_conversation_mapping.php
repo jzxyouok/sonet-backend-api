@@ -20,7 +20,7 @@ class UserConversationMapping extends Migration
             
             $table->unique(['user_id','conversation_id']);
 
-            $table->timestamps('created_at');
+            $table->timestamp('created_at');
         });
     }
 
@@ -31,7 +31,7 @@ class UserConversationMapping extends Migration
      */
     public function down()
     {
-        Schema::table('User_conversation_mapping', function ($table) {
+        Schema::table('UserConversationMapping', function ($table) {
             $table->dropForeign('UserConversationMapping_conversation_id_foreign');
             $table->dropForeign('UserConversationMapping_user_id_foreign');
         });

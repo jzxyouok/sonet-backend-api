@@ -27,5 +27,19 @@ class UserController extends Controller
     	return $user = JWTAuth::parseToken()->authenticate();
     }
     
-    
+    public function allUser()
+    {
+        return response()->json([
+                'data' => User::all()
+            ], 200);
+    }
+
+    public function allFriend()
+    {   
+        $user = JWTAuth::parseToken()->authenticate();
+        
+        return response()->json([
+                'data' => User::all()
+            ], 200);
+    }
 }
