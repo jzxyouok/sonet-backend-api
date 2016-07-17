@@ -164,6 +164,7 @@ return [
 
         'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
         'Barryvdh\Cors\ServiceProvider',
+        Vinkla\Pusher\PusherServiceProvider::class,
 
 
     ],

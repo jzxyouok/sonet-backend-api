@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Message;
 use Illuminate\Http\Request;
 use App\UserConversationMapping;
+use App\Events\ChatEvent;
 
 use App\Http\Requests;
 
@@ -64,8 +65,9 @@ class MessageController extends Controller
         
         $Message->save();
 
+        event(new ChatEvent($Message));
         return response()->json([
-                            'data' => $Message
+                            'success' => 'message successfully created'
                         ], 200);
     }
 
