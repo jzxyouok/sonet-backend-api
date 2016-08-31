@@ -28,6 +28,8 @@ Route::get('conversation.messages','ConversationController@messages');
 Route::post('signin','AuthenticateController@signin');
 Route::post('user.create','UserController@create');
 Route::post('signup','AuthenticateController@signup');
+Route::post('callRequest','callController@sendCallRequest');
+Route::post('callRequestAnswer','callController@acceptCallRequest');
 
 Route::group(['middleware' => 'jwt.auth.group'], function () {
     
